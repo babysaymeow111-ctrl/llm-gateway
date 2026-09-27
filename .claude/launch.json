@@ -1,0 +1,3 @@
+{ "version": "0.0.1", "configurations": [
+  { "name": "gateway-dev", "runtimeExecutable": "node", "runtimeArgs": ["tools/dev.js"], "port": 8790 }
+] }

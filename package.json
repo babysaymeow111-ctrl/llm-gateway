@@ -1,0 +1,17 @@
+{
+  "name": "llm-gateway",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Шлюз к открытым языковым моделям в формате OpenAI API: ключи с рублёвым балансом, коды пополнения для Plati и GGSel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "dev": "node tools/dev.js",
+    "test": "node test/smoke.js",
+    "build:site": "node --env-file-if-exists=.env tools/build-site.js",
+    "codes": "node --env-file-if-exists=.env tools/admin.js codes",
+    "admin": "node --env-file-if-exists=.env tools/admin.js",
+    "upstream-models": "node --env-file-if-exists=.env tools/upstream-models.js"
+  },
+  "engines": { "node": ">=22.13" }
+}

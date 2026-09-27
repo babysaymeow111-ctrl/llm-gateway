@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{BRAND}} — API DeepSeek, Kimi и GLM в рублях</title>
+<meta name="api-base" content="{{API_BASE}}">
+<meta name="description" content="API открытых языковых моделей DeepSeek, Kimi и GLM в формате OpenAI. Оплата в рублях кодами пополнения, списание по факту.">
+<style>
+:root{
+  --bg:#f4f5f7; --surface:#fff; --ink:#171a20; --muted:#5b6270; --rule:#dde0e6;
+  --accent:#2b54c9; --accent-ink:#fff; --code-bg:#eef0f4;
+  --ok:#1c7a3f; --ok-bg:#e3f3e8; --err:#b3261e; --err-bg:#fbe5e2;
+  --mono:ui-monospace,"Cascadia Mono","JetBrains Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    color-scheme:dark;
+    --bg:#101216; --surface:#181b21; --ink:#e3e6eb; --muted:#9aa1ad; --rule:#2a2f38;
+    --accent:#86a4ff; --accent-ink:#0d1220; --code-bg:#1f232b;
+    --ok:#74d192; --ok-bg:#15291c; --err:#f28b82; --err-bg:#331a18;
+  }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-inline:16px;padding-block:32px 56px}
+.wrap{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:40px}
+h1{font-size:clamp(26px,4.5vw,36px);line-height:1.15;margin:0;text-wrap:balance}
+h2{font-size:20px;margin:0}
+p{margin:0}
+.muted{color:var(--muted)}
+.lede{font-size:18px;max-width:40em}
+header{display:flex;flex-direction:column;gap:12px}
+.brand{font-weight:700;letter-spacing:.02em;color:var(--accent)}
+.points{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--muted);margin:0;padding:0;list-style:none}
+.points li::before{content:"✓ ";color:var(--ok)}
+section{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+label{font-size:14px;font-weight:600;display:flex;flex-direction:column;gap:6px}
+label small{font-weight:400;color:var(--muted)}
+input[type=text]{font:15px var(--mono);padding:10px 12px;border:1px solid var(--rule);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+input[type=text]:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button{font:600 15px system-ui,sans-serif;padding:10px 18px;border-radius:8px;border:0;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+button.ghost{background:transparent;color:var(--accent);border:1px solid var(--rule);padding:6px 12px;font-size:13px}
+button:disabled{opacity:.6;cursor:default}
+.check{flex-direction:row;align-items:center;font-weight:400;gap:8px}
+.msg{border-radius:8px;padding:12px 14px;font-size:15px;display:flex;flex-direction:column;gap:8px}
+.msg.ok{background:var(--ok-bg);color:var(--ink)}
+.msg.err{background:var(--err-bg);color:var(--err)}
+.keybox{font:14px var(--mono);word-break:break-all;background:var(--surface);border:1px solid var(--rule);border-radius:6px;padding:8px 10px}
+.big{font:600 28px var(--mono);font-variant-numeric:tabular-nums}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);white-space:nowrap}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+code{font-family:var(--mono);font-size:.92em;background:var(--code-bg);padding:1px 5px;border-radius:4px}
+pre{margin:0;background:var(--code-bg);border-radius:8px;padding:14px;overflow-x:auto;font:13px/1.5 var(--mono)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button{background:transparent;color:var(--muted);border:1px solid var(--rule);padding:6px 12px;font-size:13px}
+.tabs button[aria-selected=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+footer{display:flex;flex-wrap:wrap;gap:8px 20px;font-size:14px;color:var(--muted);border-top:1px solid var(--rule);padding-top:20px}
+footer a{color:var(--muted)}
+a{color:var(--accent)}
+@media (max-width:640px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="brand">{{BRAND}}</span>
+  <h1>API DeepSeek, Kimi и GLM с оплатой в рублях</h1>
+  <p class="lede muted">Формат OpenAI API: поменяйте адрес и ключ, и готовый код, SDK или IDE-агент заработает. Платите только за израсходованные токены.</p>
+  <ul class="points">
+    <li>Без VPN и зарубежной карты</li>
+    <li>Баланс не сгорает</li>
+    <li>Без регистрации</li>
+    <li>За ошибки не списываем</li>
+  </ul>
+</header>
+
+<section class="grid2">
+  <form class="card" id="redeem-form" autocomplete="off">
+    <h2>Активировать код</h2>
+    <label for="code">Код пополнения
+      <input type="text" id="code" placeholder="XXXX-XXXX-XXXX-XXXX" required spellcheck="false">
+    </label>
+    <label for="topup-key">Ключ для пополнения <small>Оставьте пустым, чтобы получить новый ключ</small>
+      <input type="text" id="topup-key" placeholder="sk-…" spellcheck="false">
+    </label>
+    <div class="row"><button type="submit" id="redeem-btn">Активировать</button></div>
+    <div id="redeem-result" hidden></div>
+  </form>
+
+  <form class="card" id="balance-form" autocomplete="off">
+    <h2>Баланс и расход</h2>
+    <label for="me-key">Ваш ключ
+      <input type="text" id="me-key" placeholder="sk-…" required spellcheck="false">
+    </label>
+    <label class="check" for="remember"><input type="checkbox" id="remember"> Запомнить ключ в этом браузере</label>
+    <div class="row"><button type="submit" id="balance-btn">Показать</button></div>
+    <div id="balance-result" hidden></div>
+  </form>
+</section>
+
+<section id="usage-section" hidden>
+  <h2>Последние запросы</h2>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>Время</th><th>Модель</th><th class="num">Вход</th><th class="num">Выход</th><th class="num">Стоимость</th></tr></thead>
+      <tbody id="usage-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>Модели и цены</h2>
+  <p class="muted">Цена в рублях за 1 млн токенов. Входные токены — ваш запрос с историей диалога, выходные — ответ модели, включая рассуждения.</p>
+  <div class="card table-wrap">
+    <table>
+      <thead><tr><th>Модель</th><th>Разработчик</th><th class="num">Вход, ₽</th><th class="num">Выход, ₽</th></tr></thead>
+      <tbody id="models-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2>Подключение</h2>
+  <p>Адрес API: <code id="base-url"></code> <button type="button" class="ghost" data-copy-from="base-url">Копировать</button></p>
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" aria-selected="true" data-tab="curl">curl</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="python">Python</button>
+    <button type="button" role="tab" aria-selected="false" data-tab="node">Node.js</button>
+  </div>
+  <pre id="sample"></pre>
+  <p class="muted">Поддерживаются <code>GET /v1/models</code> и <code>POST /v1/chat/completions</code>, включая потоковый режим (<code>stream: true</code>) и вызов инструментов. Лимиты: 120 запросов в минуту и 4 одновременных запроса на ключ.</p>
+</section>
+
+<footer>
+  <a href="terms">Публичная оферта</a>
+  <a href="privacy">Политика конфиденциальности</a>
+  <span>Поддержка: <span id="contact">{{CONTACT_EMAIL}}</span></span>
+</footer>
+
+</div>
+
+<script type="application/json" id="static-models">{{MODELS_JSON}}</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  // Адрес сервера API: при сборке для GitHub Pages подставляется из API_BASE_URL, на самом сервере пустой.
+  // «offline» — сайт собран без сервера: цены показываем, формы отключаем.
+  var API = (document.querySelector('meta[name=api-base]').content || '').replace(/\/$/, '');
+  if (API.indexOf('{{') === 0) API = '';
+  var OFFLINE = API === 'offline';
+  var BASE = (OFFLINE ? 'https://…' : (API || location.origin)) + '/v1';
+  $('base-url').textContent = BASE;
+  var LS = 'gw-key';
+  try { var saved = localStorage.getItem(LS); if (saved) { $('me-key').value = saved; $('remember').checked = true; } } catch (e) {}
+
+  function fmtRub(v) { return v.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₽'; }
+  function fmtNum(v) { return v.toLocaleString('ru-RU'); }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+
+  function copy(text, btn) {
+    var done = function () { var t = btn.textContent; btn.textContent = 'Скопировано'; setTimeout(function () { btn.textContent = t; }, 1500); };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-copy-from]');
+    if (b) copy($(b.getAttribute('data-copy-from')).textContent, b);
+  });
+
+  function api(path, opts) {
+    return fetch(path, opts).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (!r.ok) throw new Error((j.error && j.error.message) || ('Ошибка ' + r.status));
+        return j;
+      });
+    });
+  }
+
+  function show(box, kind, nodes) {
+    box.hidden = false;
+    box.className = 'msg ' + kind;
+    box.replaceChildren.apply(box, nodes);
+  }
+
+  // ---------- активация кода ----------
+  $('redeem-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = $('redeem-btn'), box = $('redeem-result');
+    btn.disabled = true;
+    var body = { code: $('code').value.trim() };
+    if ($('topup-key').value.trim()) body.key = $('topup-key').value.trim();
+    api(API + '/api/redeem', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+      .then(function (r) {
+        $('code').value = '';
+        if (r.key) {
+          var keyEl = el('div', 'keybox', r.key); keyEl.id = 'new-key';
+          var cp = el('button', 'ghost', 'Копировать ключ'); cp.type = 'button'; cp.setAttribute('data-copy-from', 'new-key');
+          show(box, 'ok', [
+            el('b', null, 'Готово: на балансе ' + fmtRub(r.balance_rub)),
+            el('span', null, 'Ваш ключ. Сохраните его сейчас — показать ключ ещё раз мы не сможем:'),
+            keyEl, cp,
+          ]);
+          $('me-key').value = r.key;
+          $('topup-key').value = r.key;
+        } else {
+          show(box, 'ok', [el('b', null, 'Ключ ' + r.key_hint + ' пополнен на ' + fmtRub(r.added_rub)), el('span', null, 'Баланс: ' + fmtRub(r.balance_rub))]);
+        }
+      })
+      .catch(function (err) { show(box, 'err', [el('span', null, err.message)]); })
+      .finally(function () { btn.disabled = false; });
+  });
+
+  // ---------- баланс ----------
+  $('balance-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var btn = $('balance-btn'), box = $('balance-result'), key = $('me-key').value.trim();
+    try { if ($('remember').checked) localStorage.setItem(LS, key); else localStorage.removeItem(LS); } catch (e2) {}
+    btn.disabled = true;
+    api(API + '/api/me', { headers: { Authorization: 'Bearer ' + key } })
+      .then(function (r) {
+        show(box, 'ok', [
+          el('span', 'muted', 'Ключ ' + r.key_hint),
+          el('span', 'big', fmtRub(r.balance_rub)),
+          el('span', null, 'Запросов: ' + fmtNum(r.totals.requests) + ', потрачено ' + fmtRub(r.totals.spent_rub)),
+        ]);
+        var body = $('usage-body');
+        body.replaceChildren();
+        r.usage.forEach(function (u) {
+          var tr = el('tr');
+          tr.appendChild(el('td', null, new Date(u.ts * 1000).toLocaleString('ru-RU')));
+          tr.appendChild(el('td', null, u.model + (u.status >= 400 ? ' · ошибка ' + u.status : '')));
+          tr.appendChild(el('td', 'num', fmtNum(u.prompt_tokens)));
+          tr.appendChild(el('td', 'num', fmtNum(u.completion_tokens)));
+          tr.appendChild(el('td', 'num', fmtRub(u.cost_rub) + (u.estimated ? ' *' : '')));
+          body.appendChild(tr);
+        });
+        if (!r.usage.length) { var tr = el('tr'); var td = el('td', 'muted', 'Запросов пока не было'); td.colSpan = 5; tr.appendChild(td); body.appendChild(tr); }
+        $('usage-section').hidden = false;
+      })
+      .catch(function (err) { show(box, 'err', [el('span', null, err.message)]); $('usage-section').hidden = true; })
+      .finally(function () { btn.disabled = false; });
+  });
+
+  // ---------- модели: список и цены встроены в страницу при сборке ----------
+  var models = [];
+  try { models = JSON.parse($('static-models').textContent); } catch (e2) {}
+  var firstModel = models.length ? models[0].id : 'deepseek-v4-flash';
+  var modelsBody = $('models-body');
+  modelsBody.replaceChildren();
+  models.forEach(function (m) {
+    var tr = el('tr');
+    tr.appendChild(el('td', null, m.id));
+    tr.appendChild(el('td', null, m.owned_by));
+    tr.appendChild(el('td', 'num', m.pricing.input.toLocaleString('ru-RU')));
+    tr.appendChild(el('td', 'num', m.pricing.output.toLocaleString('ru-RU')));
+    modelsBody.appendChild(tr);
+  });
+
+  // ---------- сайт без сервера ----------
+  if (OFFLINE) {
+    ['redeem-form', 'balance-form'].forEach(function (id) {
+      var f = $(id);
+      f.querySelectorAll('input, button').forEach(function (c) { c.disabled = true; });
+      var note = el('p', 'muted', 'Сервер API ещё не подключён: активация и проверка баланса заработают после запуска.');
+      f.appendChild(note);
+    });
+  }
+
+  // ---------- примеры ----------
+  var current = 'curl';
+  function renderSample(kind) {
+    current = kind;
+    var s = {
+      curl: 'curl ' + BASE + '/chat/completions \\\n  -H "Authorization: Bearer $API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"model": "' + firstModel + '", "messages": [{"role": "user", "content": "Привет!"}]}\'',
+      python: 'from openai import OpenAI\n\nclient = OpenAI(base_url="' + BASE + '", api_key="sk-…")\nr = client.chat.completions.create(\n    model="' + firstModel + '",\n    messages=[{"role": "user", "content": "Привет!"}],\n)\nprint(r.choices[0].message.content)',
+      node: 'import OpenAI from "openai";\n\nconst client = new OpenAI({ baseURL: "' + BASE + '", apiKey: "sk-…" });\nconst r = await client.chat.completions.create({\n  model: "' + firstModel + '",\n  messages: [{ role: "user", content: "Привет!" }],\n});\nconsole.log(r.choices[0].message.content);',
+    };
+    $('sample').textContent = s[kind];
+    document.querySelectorAll('[data-tab]').forEach(function (b) { b.setAttribute('aria-selected', String(b.getAttribute('data-tab') === kind)); });
+  }
+  document.querySelectorAll('[data-tab]').forEach(function (b) {
+    b.addEventListener('click', function () { renderSample(b.getAttribute('data-tab')); });
+  });
+  renderSample('curl');
+  if (!$('contact').textContent.trim()) $('contact').parentNode.hidden = true;
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Конфигурация для Amvera Cloud: сборка из Dockerfile, база в постоянном хранилище /data.
+meta:
+  environment: docker
+  toolchain:
+    name: docker
+    version: latest
+build:
+  dockerfile: Dockerfile
+  skip: false
+run:
+  persistenceMount: /data
+  containerPort: 8790

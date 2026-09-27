@@ -1,0 +1,52 @@
+# Сборка и публикация сайта на GitHub Pages при каждом push в main.
+# Настройки берутся из Settings → Secrets and variables → Actions → Variables репозитория.
+# В Settings → Pages выберите Source: GitHub Actions.
+name: Сайт на GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['public/**', 'legal.js', 'models.js', 'tools/build-site.js', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node tools/build-site.js
+        env:
+          API_BASE_URL: ${{ vars.API_BASE_URL }}
+          MARKUP: ${{ vars.MARKUP }}
+          BRAND: ${{ vars.BRAND }}
+          CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+          SELLER_NAME: ${{ vars.SELLER_NAME }}
+          SELLER_INN: ${{ vars.SELLER_INN }}
+          HOSTING_NAME: ${{ vars.HOSTING_NAME }}
+          UPSTREAM_NAME: ${{ vars.UPSTREAM_NAME }}
+          SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
